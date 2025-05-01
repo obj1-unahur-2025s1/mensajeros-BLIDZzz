@@ -1,9 +1,102 @@
-import example.pepita
+import wollok.mirror.*
+import parte1.*
+import parte2.*
+import parte3.*
 
-describe "group of tests for pepita" {
-
-  test "pepita has initial energy" {
-    assert.equals(100, pepita.energy())
+describe "Mensajeros" {
+  test "Neo puede entrar a la Matrix" {
+    neo.credito(true)
+    assert.that(neo.puedeEntregar(paquete2))
   }
+  
+  test "Roberto entrega" {
+    camion.cantAcoplados(1)
+    roberto.transporteActual(camion)
+    assert.that(roberto.puedeIngresar(paquete1))
+  }
+  
+  test "Neo entrega" {
+    neo.credito(true)
+    assert.that(neo.puedeEntregar(paquete2))
+  }
+}
 
+describe "mensajeria" {
+  test "Ejercicio 1" {
+    mensajeria.contratar(jose)
+    assert.that(mensajeria.mensajeros().contains(jose))
+  }
+  
+  test "Ejercicio 2" {
+    mensajeria.despedir(neo)
+    assert.that(mensajeria.mensajeros().contains(neo).negate())
+  }
+  
+  test "Ejercicio 3" {
+    mensajeria.purga()
+    assert.that(mensajeria.mensajeros().isEmpty())
+  }
+  
+  test "Ejercicio 4" {
+    assert.that(mensajeria.esGrande())
+  }
+  
+  test "Ejercicio 5" {
+    roberto.transporteActual(bicicleta)
+    assert.that(mensajeria.primeroEntrega(paquete1))
+  }
+  
+  test "Ejercicio 6" {
+    assert.equals(0, mensajeria.pesoUltimoMensajero())
+  }
+}
+
+describe "Parte 3" {
+  test "Paquetito" {
+    assert.that(chuckNorris.puedeEntregar(paquetito))
+  }
+  
+  test "Ejercicio 1" {
+    paquetonViajero.montoPagado(350)
+    assert.that(sistemaMensajeria.paqueteEntregable(paquetonViajero))
+  }
+  
+  test "Ejercicio 2" {
+    paquetonViajero.montoPagado(350)
+    assert.equals(
+      [chuckNorris, neo],
+      sistemaMensajeria.mensajerosAptos(paquetonViajero)
+    )
+  }
+  
+  test "Ejercicio 3" {
+    roberto.transporteActual(camion)
+    assert.that(sistemaMensajeria.tieneSobrepeso())
+  }
+  
+  test "Ejercicio 4 y 5" {
+    paquetonViajero.montoPagado(350)
+    sistemaMensajeria.enviarPaquete(paquetonViajero)
+    assert.equals(350, sistemaMensajeria.facturacion())
+  }
+  
+  test "Ejercicio 6" {
+    paquetonViajero.montoPagado(350)
+    sistemaMensajeria.enviarPaquetes(
+      [paquetonViajero, paquetito, paquetonViajero]
+    )
+    assert.equals(700, sistemaMensajeria.facturacion())
+  }
+  
+  test "Ejercicio 7" {
+    paquetotote.montoPagado(4000)
+    mensajeria.mensajeros().clear()
+    mensajeria.contratar(roberto)
+    sistemaMensajeria.enviarPaquetes([paquetotote, paquetonViajero, paquete1])
+    assert.equals(2, sistemaMensajeria.paquetesPendientes().size())
+    mensajeria.contratar(chuckNorris)
+    paquetonViajero.montoPagado(4000)
+    sistemaMensajeria.enviarElMasCaro()
+    assert.equals(1, sistemaMensajeria.paquetesPendientes().size())
+  }
 }
